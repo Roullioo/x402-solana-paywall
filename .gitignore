@@ -1,0 +1,56 @@
+# Dependencies
+node_modules
+.pnp
+.pnp.js
+
+# Build outputs
+dist
+build
+.next
+.turbo
+
+# Environment
+.env
+.env.local
+.env*.local
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Database
+*.db
+*.db-journal
+*.db-shm
+*.db-wal
+payments.db
+
+# Keys & Secrets
+receiver-keypair.json
+*.keypair.json
+~/.x402-agent/
+.x402-agent/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Testing
+coverage
+.nyc_output
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+*~
+
+# Data stores
+packages/server/data/*.json
+!packages/server/data/.gitkeep
+

@@ -1,0 +1,46 @@
+{
+  "name": "x402-solana-paywall",
+  "version": "1.0.0",
+  "description": "HTTP 402 Paywall on Solana with autonomous agent",
+  "private": true,
+  "scripts": {
+    "dev": "pnpm --filter server dev & pnpm --filter web dev",
+    "build": "pnpm -r build",
+    "test": "pnpm -r test",
+    "lint": "pnpm -r lint",
+    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\"",
+    "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,md}\"",
+    "e2e": "node scripts/e2e.mjs",
+    "agent:keygen": "pnpm --filter agent keygen",
+    "agent:balance": "pnpm --filter agent balance",
+    "agent:airdrop": "pnpm --filter agent airdrop",
+    "agent:fetch": "pnpm --filter agent fetch",
+    "agent:run": "node scripts/agent-run.mjs",
+    "agent:link": "cd packages/agent && pnpm link --global",
+    "agent:build": "pnpm --filter agent build",
+    "test:usage": "node scripts/test-usage.mjs",
+    "server:dev": "pnpm --filter server dev",
+    "web:dev": "pnpm --filter web dev",
+    "clean": "pnpm -r clean && rm -rf node_modules"
+  },
+  "keywords": ["solana", "paywall", "http-402", "web3", "typescript"],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^20.10.5",
+    "@typescript-eslint/eslint-plugin": "^6.15.0",
+    "@typescript-eslint/parser": "^6.15.0",
+    "eslint": "^8.56.0",
+    "eslint-config-prettier": "^9.1.0",
+    "husky": "^8.0.3",
+    "lint-staged": "^15.2.0",
+    "prettier": "^3.1.1",
+    "tsx": "^4.7.0",
+    "typescript": "^5.3.3"
+  },
+  "engines": {
+    "node": ">=20.0.0",
+    "pnpm": ">=8.0.0"
+  }
+}
+

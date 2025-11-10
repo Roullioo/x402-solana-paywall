@@ -1,0 +1,41 @@
+{
+  "name": "@x402/agent",
+  "version": "1.0.0",
+  "type": "module",
+  "bin": {
+    "x402-agent": "./dist/cli.js",
+    "x402": "./dist/cli.js"
+  },
+  "main": "./dist/cli.js",
+  "exports": {
+    ".": "./dist/cli.js",
+    "./tools": "./dist/tools/x402.js",
+    "./agent": "./dist/agent.js",
+    "./wallet": "./dist/wallet.js",
+    "./policy": "./dist/policy.js"
+  },
+  "scripts": {
+    "build": "tsup src/cli.ts --format esm",
+    "dev": "tsx src/cli.ts",
+    "lint": "eslint src --ext .ts",
+    "test": "vitest run",
+    "keygen": "tsx src/cli.ts keygen",
+    "balance": "tsx src/cli.ts balance",
+    "airdrop": "tsx src/cli.ts airdrop",
+    "fetch": "tsx src/cli.ts fetch",
+    "run": "tsx src/cli.ts run",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@solana/web3.js": "^1.87.6",
+    "@x402/shared": "workspace:*",
+    "commander": "^11.1.0",
+    "dotenv": "^16.3.1",
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "tsup": "^8.0.1",
+    "vitest": "^1.1.0"
+  }
+}
+

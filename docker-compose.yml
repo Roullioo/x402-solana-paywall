@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  server:
+    build:
+      context: .
+      dockerfile: packages/server/Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - RPC_URL=${RPC_URL:-https://api.devnet.solana.com}
+      - RECEIVER_PUBKEY=${RECEIVER_PUBKEY}
+      - PRICE_LAMPORTS=${PRICE_LAMPORTS:-5000}
+      - X402_HEADER=${X402_HEADER:-X-Payment}
+      - STORE_DRIVER=file
+      - STORE_FILE=/app/data/store.json
+      - USE_SPL=false
+      - PORT=3000
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - OPENWEATHER_API_KEY=${OPENWEATHER_API_KEY:-}
+    volumes:
+      - server-data:/app/data
+    healthcheck:
+      test: ["CMD-SHELL", "node -e \"require('http').get('http://localhost:3000/healthz', (r) => process.exit(r.statusCode === 200 ? 0 : 1))\""]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 5s
+
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+    ports:
+      - "3001:3000"
+    environment:
+      - NEXT_PUBLIC_API_BASE=http://localhost:3000
+    depends_on:
+      server:
+        condition: service_healthy
+
+volumes:
+  server-data:
+
