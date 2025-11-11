@@ -224,18 +224,207 @@ const data = await fetchWithPayment('/api/data');
 
 ### Example 2: Using the Agent CLI
 
-The easiest way to interact with x402 APIs is using the built-in agent:
+The easiest way to interact with x402 APIs is using the built-in agent CLI. This section provides a complete guide on how to make requests using the CLI.
+
+#### Step 1: Setup the Agent Wallet
+
+First, you need to generate a wallet for the agent and fund it:
 
 ```bash
-# Setup agent wallet
+# Generate a new keypair for the agent
 pnpm agent:keygen
-pnpm agent:airdrop 0.1  # Get some SOL on devnet
 
-# Fetch protected resource
-pnpm agent:run "get weather" "http://localhost:3000/api/weather?city=Paris"
-pnpm agent:run "summarize" "http://localhost:3000/api/ai/summarize?url=https://solana.com"
-pnpm agent:run "get price" "http://localhost:3000/api/crypto?asset=SOL"
+# Output:
+# [x402] Keypair generated!
+# [x402] Public Key: 7xKXtg2CW87d97TXJSDpbD5jBkheTqA83TZRuJosgAsU
+
+# Check your balance
+pnpm agent:balance
+
+# Output:
+# [x402] Balance: 0 SOL
+# [x402] Public Key: 7xKXtg2CW87d97TXJSDpbD5jBkheTqA83TZRuJosgAsU
+
+# Request airdrop on devnet (free SOL for testing)
+pnpm agent:airdrop 0.1
+
+# Output:
+# [x402] Requesting airdrop of 0.1 SOL...
+# [x402] Airdrop successful!
+# [x402] Signature: 5j7xK...
+# [x402] New balance: 0.1 SOL
 ```
+
+**Note:** Airdrops only work on devnet. For mainnet, you need to transfer SOL from another wallet.
+
+#### Step 2: Configure the Agent
+
+Create or edit `packages/agent/.env`:
+
+```bash
+# Solana RPC endpoint (must match server network)
+RPC_URL=https://api.devnet.solana.com
+
+# X402 header name (default: X-Payment)
+X402_HEADER=X-Payment
+
+# Policy configuration
+AGENT_MAX_LAMPORTS_PER_TASK=500000  # Max budget per request
+AGENT_WHITELIST_HOSTS=localhost:3000  # Allowed hosts
+
+# Optional: LLM for payment justification
+OPENAI_API_KEY=sk-...  # Or use local LLM
+USE_LOCAL_LLM=true
+LLM_LOCAL_URL=http://127.0.0.1:1234
+AGENT_MODEL=qwen/qwen3-coder-30b
+```
+
+#### Step 3: Make Requests with the CLI
+
+The agent CLI provides two main commands for making requests:
+
+##### Option A: Using `agent:run` (Recommended - with AI agent)
+
+The `run` command uses the autonomous AI agent with policy checks and optional LLM justification:
+
+```bash
+# Basic usage
+pnpm agent:run "get protected resource" "http://localhost:3000/api/data"
+
+# Example output:
+# [x402] Agent starting task: "get protected resource"
+# [x402] Target: http://localhost:3000/api/data
+# [x402] Wallet: 7xKXtg2CW87d97TXJSDpbD5jBkheTqA83TZRuJosgAsU
+# [x402] Policy loaded
+# [x402] Max budget: 500000 lamports
+# [x402] Whitelist: localhost:3000
+# [x402] PLAN: Fetch resource at http://localhost:3000/api/data
+# [x402] ACT: Executing fetch...
+# [x402] Status 402 - Payment required
+# [x402] Payment Requirements:
+# [x402] Amount: 5000 lamports
+# [x402] Receiver: HfJGGs4xrRHcujrUJBWZnvBBzfCgKUBSacEdSy6kgMq8
+# [x402] Reference: 550e8400-e29b-41d4-a716-446655440000
+# [x402] Network: devnet
+# [x402] Policy loaded - Checking authorization...
+# [x402] Payment authorized by policy
+# [x402] Sending payment...
+# [x402] Payment sent!
+# [x402] Signature: 3J98t1WpEZ73CNmQviecrnyiWrnqRhWNLy
+# [x402] Waiting for confirmation...
+# [x402] Transaction confirmed!
+# [x402] Re-fetching with X-Payment header...
+# [x402] Status: 200
+# [x402] Response: {"data":"Secret resource for paid users","paid":true,"reference":"550e8400-e29b-41d4-a716-446655440000","txSig":"3J98t1WpEZ73CNmQviecrnyiWrnqRhWNLy"}
+# [x402] OBSERVE: Task completed
+# [x402] Status: 200
+# [x402] Paid: true
+# [x402] TxSig: 3J98t1W...
+```
+
+**More examples with different endpoints:**
+
+```bash
+# Get weather data
+pnpm agent:run "get weather for Paris" "http://localhost:3000/api/weather?city=Paris"
+
+# Summarize a website
+pnpm agent:run "summarize solana website" "http://localhost:3000/api/ai/summarize?url=https://solana.com"
+
+# Get crypto price
+pnpm agent:run "get SOL price" "http://localhost:3000/api/crypto?asset=SOL"
+```
+
+##### Option B: Using `agent:fetch` (Simple - without AI agent)
+
+The `fetch` command is simpler and doesn't use policy checks or LLM. It directly handles the payment flow:
+
+```bash
+# Basic usage
+pnpm agent:fetch "http://localhost:3000/api/data"
+
+# Example output:
+# [x402] Fetch: http://localhost:3000/api/data
+# [x402] Status 402 - Payment required
+# [x402] Payment Requirements:
+# [x402] Amount: 5000 lamports
+# [x402] Receiver: HfJGGs4xrRHcujrUJBWZnvBBzfCgKUBSacEdSy6kgMq8
+# [x402] Reference: 550e8400-e29b-41d4-a716-446655440000
+# [x402] Network: devnet
+# [x402] Sending payment...
+# [x402] Payment sent!
+# [x402] Signature: 3J98t1WpEZ73CNmQviecrnyiWrnqRhWNLy
+# [x402] Waiting for confirmation...
+# [x402] Transaction confirmed!
+# [x402] Re-fetching with X-Payment header...
+# [x402] Status: 200
+# [x402] Response: {"data":"Secret resource for paid users","paid":true,"reference":"550e8400-e29b-41d4-a716-446655440000","txSig":"3J98t1WpEZ73CNmQviecrnyiWrnqRhWNLy"}
+```
+
+**When to use `fetch` vs `run`:**
+- Use `run` when you want policy checks, budget limits, and LLM justification
+- Use `fetch` for simple, direct requests without policy validation
+
+#### Step 4: Manual Payment (Optional)
+
+You can also send payments manually using the `pay` command:
+
+```bash
+# Send payment with memo
+pnpm agent:pay HfJGGs4xrRHcujrUJBWZnvBBzfCgKUBSacEdSy6kgMq8 5000 --reference "550e8400-e29b-41d4-a716-446655440000"
+
+# Output:
+# [x402] Sending 5000 lamports to HfJGGs4xrRHcujrUJBWZnvBBzfCgKUBSacEdSy6kgMq8...
+# [x402] Memo: 550e8400-e29b-41d4-a716-446655440000
+# [x402] Payment sent!
+# [x402] Signature: 3J98t1WpEZ73CNmQviecrnyiWrnqRhWNLy
+```
+
+#### Complete Example: Full Workflow
+
+Here's a complete example showing the full workflow:
+
+```bash
+# 1. Start the server (in another terminal)
+cd packages/server
+pnpm dev
+# Server running on http://localhost:3000
+
+# 2. Setup agent wallet
+pnpm agent:keygen
+pnpm agent:airdrop 0.1
+
+# 3. Check balance
+pnpm agent:balance
+# [x402] Balance: 0.1 SOL
+
+# 4. Make a request
+pnpm agent:run "get protected data" "http://localhost:3000/api/data"
+
+# 5. Check balance again (should be slightly less due to fees)
+pnpm agent:balance
+# [x402] Balance: 0.099995 SOL
+```
+
+#### Troubleshooting CLI Requests
+
+**Error: "Payment denied by policy"**
+- Check that the host is in `AGENT_WHITELIST_HOSTS`
+- Verify the amount is within `AGENT_MAX_LAMPORTS_PER_TASK`
+
+**Error: "Insufficient funds"**
+- Check balance: `pnpm agent:balance`
+- Request airdrop: `pnpm agent:airdrop 0.1` (devnet only)
+- For mainnet, transfer SOL from another wallet
+
+**Error: "Network mismatch"**
+- Ensure `RPC_URL` in agent config matches server config
+- Both must be on devnet or both on mainnet
+
+**Error: "Transaction failed"**
+- Check Solana network status
+- Verify RPC endpoint is accessible
+- Check transaction on Solana Explorer using the txSig
 
 ### Example 3: cURL (Manual)
 
