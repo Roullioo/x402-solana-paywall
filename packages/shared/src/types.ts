@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 /**
- * Schema pour les Payment Requirements renvoyés en 402
+ * Schema for Payment Requirements returned in 402
  */
 export const PaymentRequirementsSchema = z.object({
   amountLamports: z.number().int().positive(),
@@ -15,7 +15,7 @@ export const PaymentRequirementsSchema = z.object({
 export type PaymentRequirements = z.infer<typeof PaymentRequirementsSchema>;
 
 /**
- * Schema pour l'en-tête X402 (base64 JSON)
+ * Schema for X402 header (base64 JSON)
  */
 export const X402HeaderPayloadSchema = z.object({
   txSig: z.string(),
@@ -25,7 +25,7 @@ export const X402HeaderPayloadSchema = z.object({
 export type X402HeaderPayload = z.infer<typeof X402HeaderPayloadSchema>;
 
 /**
- * Schema pour la vérification de paiement
+ * Schema for payment verification
  */
 export const VerifyPaymentRequestSchema = z.object({
   txSig: z.string(),
@@ -45,7 +45,7 @@ export const VerifyPaymentResponseSchema = z.object({
 export type VerifyPaymentResponse = z.infer<typeof VerifyPaymentResponseSchema>;
 
 /**
- * Schema pour la ressource payée
+ * Schema for paid resource
  */
 export const PaidResourceSchema = z.object({
   data: z.any(),

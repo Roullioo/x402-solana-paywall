@@ -25,9 +25,9 @@ curl https://x402-server.fly.dev/healthz
 
 ### Option 2: Render
 
-1. Create an account sur [render.com](https://render.com)
+1. Create an account on [render.com](https://render.com)
 2. New "Web Service"
-3. Connect your GitHub repo GitHub
+3. Connect your GitHub repo
 4. Configuration:
    - **Build Command:** `pnpm install && pnpm --filter @x402/server build`
    - **Start Command:** `cd packages/server && node dist/index.js`
@@ -61,7 +61,7 @@ curl http://localhost:3000/healthz
 ### Server (optional)
 - `OPENAI_API_KEY`: For real AI API
 - `OPENWEATHER_API_KEY`: For real weather API
-- `STORE_DRIVER`: `file` ou `memory` (default: file)
+- `STORE_DRIVER`: `file` or `memory` (default: file)
 - `STORE_FILE`: Store file path (default: ./data/store.json)
 
 ### Agent
@@ -113,4 +113,3 @@ docker-compose logs -f server
 - **Rate limiting**: Add rate limiting per IP
 - **Monitoring**: Add Sentry, DataDog, etc.
 - **Backup**: Configure automatic store backup
-

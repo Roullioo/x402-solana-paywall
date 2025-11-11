@@ -88,8 +88,6 @@ AGENT_WHITELIST_HOSTS=localhost:3000,api.trusted.com
 
 To report a vulnerability:
 - Telegram: @Roullio
-- PGP: [public key]
-- Bug bounty: [program]
 
 **Response time:** 48 hours
 **Patch time:** 7 days (critical), 30 days (medium)

@@ -61,7 +61,7 @@ export async function withRetry<T>(
 }
 
 /**
- * Sleep pour délai
+ * Sleep for delay
  */
 export function sleep(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));

@@ -1,6 +1,6 @@
 /**
- * Store abstraction pour persistance sans dépendances natives
- * Supporte: file-store (prod) et memory-store (tests)
+ * Store abstraction for persistence without native dependencies
+ * Supports: file-store (prod) and memory-store (tests)
  */
 
 import Keyv from 'keyv';
