@@ -145,12 +145,20 @@ The x402 protocol works as follows:
 
 #### Available APIs
 
-1. **Simple Resource**: `GET /api/data`
-2. **AI Summarize**: `GET /api/ai/summarize?url=<url>`
-3. **Weather**: `GET /api/weather?city=<city>`
-4. **Crypto Prices**: `GET /api/crypto?asset=<asset>`
+1. **Main Protected Resource**: `GET /api/data`
+   - This is the primary x402-protected endpoint
+   - Returns `402 Payment Required` without payment
+   - Returns resource data after successful payment verification
 
-All endpoints are protected by the x402 paywall.
+2. **Demo Endpoints** (examples only, require external API keys):
+   - `GET /api/ai/summarize?url=<url>` - AI summarization (requires `OPENAI_API_KEY`)
+   - `GET /api/weather?city=<city>` - Weather data (requires `OPENWEATHER_API_KEY`)
+   - `GET /api/crypto?asset=<asset>` - Crypto prices (uses CoinGecko API, may be rate-limited)
+
+3. **Free Demo Endpoint** (no payment required):
+   - `GET /api/demo/sol-price` - SOL price from CoinGecko (for demo purposes)
+
+**Note:** The demo endpoints (`/api/ai/*`, `/api/weather`, `/api/crypto`) are provided as examples of how to protect any API with the x402 paywall. The main endpoint `/api/data` is the core implementation.
 
 ---
 
@@ -322,17 +330,16 @@ pnpm agent:run "get protected resource" "http://localhost:3000/api/data"
 # [x402] TxSig: 3J98t1W...
 ```
 
-**More examples with different endpoints:**
+**More examples:**
 
 ```bash
-# Get weather data
-pnpm agent:run "get weather for Paris" "http://localhost:3000/api/weather?city=Paris"
+# Get protected data (main endpoint)
+pnpm agent:run "get protected data" "http://localhost:3000/api/data"
 
-# Summarize a website
-pnpm agent:run "summarize solana website" "http://localhost:3000/api/ai/summarize?url=https://solana.com"
-
-# Get crypto price
-pnpm agent:run "get SOL price" "http://localhost:3000/api/crypto?asset=SOL"
+# Note: The following endpoints are demo examples only and require external API keys:
+# - /api/weather?city=Paris (requires OPENWEATHER_API_KEY)
+# - /api/ai/summarize?url=... (requires OPENAI_API_KEY)
+# - /api/crypto?asset=SOL (uses CoinGecko API, may be rate-limited)
 ```
 
 ##### Option B: Using `agent:fetch` (Simple - without AI agent)
