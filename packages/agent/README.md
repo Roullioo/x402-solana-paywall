@@ -33,7 +33,7 @@ x402-agent run "get resource" "http://localhost:3000/api/data"
 x402 run "get resource" "http://localhost:3000/api/data"
 ```
 
-### Usage comme dépendance in another project
+### Usage as dependency in another project
 
 ```bash
 # In your project
@@ -70,7 +70,7 @@ Stored in: `~/.x402-agent/keypair.json`
 
 ### `agent balance`
 
-Displays wallet balance du wallet.
+Displays wallet balance.
 
 ```bash
 pnpm agent:balance
@@ -94,7 +94,7 @@ pnpm agent:fetch "http://localhost:3000/api/data"
 
 ## 🔧 Configuration
 
-Environment variables (`.env` ou `packages/agent/.env`):
+Environment variables (`.env` or `packages/agent/.env`):
 
 ```bash
 RPC_URL=https://api.devnet.solana.com
@@ -111,12 +111,12 @@ AGENT_MODEL=gpt-4o-mini
 # Local LLM (recommended for development)
 USE_LOCAL_LLM=true
 LLM_LOCAL_URL=http://127.0.0.1:1234
-AGENT_MODEL=qwen/qwen3-coder-30b  # or autre modèle disponible
+AGENT_MODEL=qwen/qwen3-coder-30b  # or other available model
 ```
 
 ### Local LLM Configuration
 
-The agent supports local LLMs compatible OpenAI API (e.g., LM Studio, Ollama, etc.):
+The agent supports local LLMs compatible with OpenAI API (e.g., LM Studio, Ollama, etc.):
 
 1. **Start your local LLM** on `http://127.0.0.1:1234` (or other port)
 2. **Load a model** in your LLM server
@@ -185,7 +185,7 @@ pnpm agent:run "get SOL price" \
 
 ## 🔐 Security
 
-- Keypair stored in plain text dans `~/.x402-agent/keypair.json` (POC)
+- Keypair stored in plain text in `~/.x402-agent/keypair.json` (POC)
 - Policy budget + whitelist to limit risks
 - See `SECURITY.md` for details
 
@@ -195,4 +195,3 @@ pnpm agent:run "get SOL price" \
 - Requires a funded wallet to pay fees + amount
 - Automatic retry on network error
 - Structured logs with abbreviated txSig
-
